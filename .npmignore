@@ -1,0 +1,5 @@
+.github
+.eslintcache
+node_modules
+.vscode
+tsconfig.tsbuildinfo

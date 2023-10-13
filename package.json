@@ -1,0 +1,53 @@
+{
+  "name": "@signal24/openapi-client-codegen",
+  "type": "module",
+  "version": "1.0.4",
+  "description": "OpenAPI client generator for TypeScript apps",
+  "module": "./dist/src/index.js",
+  "typings": "./dist/src/index.d.ts",
+  "bin": {
+    "generate-openapi-client": "./dist/src/cli.js"
+  },
+  "exports": {
+    "./helpers": {
+      "import": "./dist/src/helpers.js",
+      "types": "./dist/src/helpers.d.ts"
+    },
+    "./generator": {
+      "import": "./dist/src/generator.js",
+      "types": "./dist/src/generator.d.ts"
+    }
+  },
+  "browser": {
+    "openapi-typescript-codegen": false
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -p tsconfig.json && chmod +x ./dist/src/cli.js",
+    "build:clean": "rm -rf dist && yarn build",
+    "lint": "eslint . --ext .js,.cjs,.mjs,.ts --fix --ignore-path .gitignore",
+    "format": "prettier --write ."
+  },
+  "author": "Sean Ferguson <sean@sgnl24.com> ",
+  "license": "MIT",
+  "dependencies": {
+    "openapi-typescript-codegen": "^0.25.0"
+  },
+  "devDependencies": {
+    "@tsconfig/node18": "^18.2.2",
+    "@types/node": "^18.18.5",
+    "@typescript-eslint/eslint-plugin": "^6.7.5",
+    "@typescript-eslint/parser": "^6.7.5",
+    "eslint": "^8.51.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "eslint-plugin-unused-imports": "^3.0.0",
+    "prettier": "^3.0.3",
+    "ts-essentials": "^9.4.1",
+    "ts-node": "^10.9.1",
+    "tslib": "^2.6.2",
+    "type-fest": "^4.4.0",
+    "typescript": "^5.2.2"
+  }
+}
