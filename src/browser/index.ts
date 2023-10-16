@@ -94,38 +94,56 @@ export function installOpenApiClientInterceptors({
     };
 }
 
-export class FileUploadRequest {
-    constructor(blob: Blob) {
-        this.blob = blob;
-    }
-
+class BaseUploadRequest {
     validator = null;
     lastModifiedDate = null;
     size = 0;
     path = '';
     name = '';
     type = '';
-    blob!: Blob;
+}
+
+export class FileUploadRequest extends BaseUploadRequest {
+    constructor(public blob: Blob) {
+        super();
+    }
+}
+
+export class ReactNativeFileUploadRequest extends BaseUploadRequest {
+    uri: string;
+
+    constructor(options: { uri: string; name?: string; type?: string }) {
+        super();
+        this.uri = options.uri;
+        this.name = options.name ?? (undefined as any);
+        this.type = options.type ?? (undefined as any);
+    }
 }
 
 function rewriteOptionsForFileUpload(options: IRequestOptions): IRequestOptions {
-    const hasFileUpload = typeof options.body === 'object' && Object.values(options.body).some(v => v instanceof FileUploadRequest);
+    if (typeof options.body !== 'object') {
+        return options;
+    }
+
+    const hasFileUpload = Object.values(options.body).some(v => v instanceof BaseUploadRequest);
     if (!hasFileUpload) return options;
 
-    const formData: Record<string, any> = {};
+    const body = new FormData();
     const jsonBody: Record<string, any> = {};
     for (const [key, value] of Object.entries(options.body)) {
-        if (value instanceof FileUploadRequest) {
-            formData[key] = value.blob;
+        if (value instanceof ReactNativeFileUploadRequest) {
+            body.append(key, value as any);
+        } else if (value instanceof FileUploadRequest) {
+            body.append(key, value.blob);
         } else {
             jsonBody[key] = value;
         }
     }
-    formData._payload = new Blob([JSON.stringify(jsonBody)], { type: 'application/json' });
+    body.append('_payload', JSON.stringify(jsonBody));
 
     return {
         ...options,
-        body: undefined,
-        formData
+        mediaType: undefined,
+        body
     };
 }

@@ -1,0 +1,10 @@
+{
+    "extends": "@tsconfig/node18/tsconfig.json",
+    "include": ["src/browser/**/*"],
+    "compilerOptions": {
+        "composite": true,
+        "lib": ["dom"],
+        "noImplicitAny": true,
+        "outDir": "dist"
+    }
+}

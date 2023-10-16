@@ -1,0 +1,10 @@
+{
+    "extends": "@tsconfig/node18/tsconfig.json",
+    "include": ["src/index.ts", "src/node/**/*"],
+    "compilerOptions": {
+        "composite": true,
+        "types": ["node"],
+        "noImplicitAny": true,
+        "outDir": "dist"
+    }
+}

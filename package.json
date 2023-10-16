@@ -1,21 +1,21 @@
 {
   "name": "@signal24/openapi-client-codegen",
   "type": "module",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "OpenAPI client generator for TypeScript apps",
   "module": "./dist/src/index.js",
   "typings": "./dist/src/index.d.ts",
   "bin": {
-    "generate-openapi-client": "./dist/src/cli.js"
+    "generate-openapi-client": "./dist/src/node/cli.js"
   },
   "exports": {
-    "./helpers": {
-      "import": "./dist/src/helpers.js",
-      "types": "./dist/src/helpers.d.ts"
+    "./browser": {
+      "import": "./dist/src/browser/index.js",
+      "types": "./dist/src/browser/index.d.ts"
     },
-    "./generator": {
-      "import": "./dist/src/generator.js",
-      "types": "./dist/src/generator.d.ts"
+    "./node": {
+      "import": "./dist/src/node/index.js",
+      "types": "./dist/src/node/index.d.ts"
     }
   },
   "browser": {
@@ -23,7 +23,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc -p tsconfig.json && chmod +x ./dist/src/cli.js",
+    "build": "tsc -p tsconfig.browser.json && tsc -p tsconfig.node.json && chmod +x ./dist/src/node/cli.js",
     "build:clean": "rm -rf dist && yarn build",
     "lint": "eslint . --ext .js,.cjs,.mjs,.ts --fix --ignore-path .gitignore",
     "format": "prettier --write ."
