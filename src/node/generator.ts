@@ -85,7 +85,16 @@ async function generateOpenapiClientInternal(openapiYamlPath: string, outPath: s
         await OpenAPI.createClient({
             client: '@hey-api/client-fetch',
             input: openapiYamlPath,
-            output: outPath
+            output: outPath,
+            plugins: [
+                '@hey-api/schemas', // preserve default output
+                '@hey-api/typescript', // preserve default output
+                {
+                    asClass: true,
+                    serviceNameBuilder: '{{name}}Api',
+                    name: '@hey-api/sdk'
+                }
+            ]
         });
 
         if (overridesInverseMap?.[openapiYamlPath]) {
