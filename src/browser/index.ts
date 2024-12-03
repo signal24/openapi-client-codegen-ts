@@ -112,11 +112,12 @@ export class FileUploadRequest extends BaseUploadRequest {
 export class ReactNativeFileUploadRequest extends BaseUploadRequest {
     uri: string;
 
-    constructor(options: { uri: string; name?: string; type?: string }) {
+    constructor(options: { uri: string; name?: string; type?: string; mimeType?: string; size?: number }) {
         super();
         this.uri = options.uri;
         this.name = options.name ?? (undefined as any);
-        this.type = options.type ?? (undefined as any);
+        this.type = options.type ?? options.mimeType ?? (undefined as any);
+        this.size = options.size ?? 0;
     }
 }
 

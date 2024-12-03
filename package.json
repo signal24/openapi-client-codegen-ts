@@ -1,7 +1,7 @@
 {
   "name": "@signal24/openapi-client-codegen",
   "type": "module",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "OpenAPI client generator for TypeScript apps",
   "module": "./dist/src/index.js",
   "typings": "./dist/src/index.d.ts",
@@ -19,7 +19,7 @@
     }
   },
   "browser": {
-    "openapi-typescript-codegen": false
+    "@hey-api/openapi-ts": false
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -31,11 +31,12 @@
   "author": "Sean Ferguson <sean@sgnl24.com> ",
   "license": "MIT",
   "dependencies": {
-    "openapi-typescript-codegen": "^0.25.0"
+    "@hey-api/client-fetch": "^0.5.0",
+    "@hey-api/openapi-ts": "^0.58.0"
   },
   "devDependencies": {
-    "@tsconfig/node18": "^18.2.2",
-    "@types/node": "^18.18.5",
+    "@tsconfig/node22": "*",
+    "@types/node": "^22",
     "@typescript-eslint/eslint-plugin": "^6.7.5",
     "@typescript-eslint/parser": "^6.7.5",
     "eslint": "^8.51.0",
@@ -43,11 +44,11 @@
     "eslint-plugin-prettier": "^5.0.1",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-unused-imports": "^3.0.0",
-    "prettier": "^3.0.3",
-    "ts-essentials": "^9.4.1",
-    "ts-node": "^10.9.1",
-    "tslib": "^2.6.2",
-    "type-fest": "^4.4.0",
-    "typescript": "^5.2.2"
+    "prettier": "^3.4.1",
+    "ts-essentials": "^10.0.3",
+    "ts-node": "^10.9.2",
+    "tslib": "^2.8.1",
+    "type-fest": "^4.30.0",
+    "typescript": "^5.7.2"
   }
 }

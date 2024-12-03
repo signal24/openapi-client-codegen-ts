@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { copyFileSync, existsSync, readFileSync, watch } from 'node:fs';
 import { rm } from 'node:fs/promises';
 
-import * as OpenAPI from 'openapi-typescript-codegen';
+import * as OpenAPI from '@hey-api/openapi-ts';
 
 const DEFAULT_OUT_PATH = './src/openapi-client-generated';
 
@@ -73,12 +73,10 @@ export async function generateOpenapiClient(openapiYamlPath: string, outPath: st
             // ignore
         }
 
-        await OpenAPI.generate({
+        await OpenAPI.createClient({
+            client: '@hey-api/client-fetch',
             input: openapiYamlPath,
-            output: outPath,
-            clientName: 'ApiClient',
-            useOptions: true,
-            useUnionTypes: true
+            output: outPath
         });
 
         if (overridesInverseMap?.[openapiYamlPath]) {
