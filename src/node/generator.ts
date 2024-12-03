@@ -56,7 +56,18 @@ export async function generateConfiguredOpenapiClients() {
     }
 }
 
+let lastPendingGeneration: Promise<void> | null = null;
+
 export async function generateOpenapiClient(openapiYamlPath: string, outPath: string = DEFAULT_OUT_PATH) {
+    const pendingGeneration = lastPendingGeneration ?? Promise.resolve();
+    lastPendingGeneration = new Promise<void>(() => {
+        return pendingGeneration.then(() => {
+            return generateOpenapiClientInternal(openapiYamlPath, outPath);
+        });
+    });
+}
+
+async function generateOpenapiClientInternal(openapiYamlPath: string, outPath: string) {
     const yaml = readFileSync(openapiYamlPath, 'utf8');
     const hash = createHash('sha256').update(yaml).digest('hex');
 
