@@ -60,10 +60,8 @@ let lastPendingGeneration: Promise<void> | null = null;
 
 export async function generateOpenapiClient(openapiYamlPath: string, outPath: string = DEFAULT_OUT_PATH) {
     const pendingGeneration = lastPendingGeneration ?? Promise.resolve();
-    lastPendingGeneration = new Promise<void>(() => {
-        return pendingGeneration.then(() => {
-            return generateOpenapiClientInternal(openapiYamlPath, outPath);
-        });
+    lastPendingGeneration = new Promise<void>(resolve => {
+        pendingGeneration.then(() => generateOpenapiClientInternal(openapiYamlPath, outPath)).then(resolve);
     });
 }
 
