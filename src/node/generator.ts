@@ -63,6 +63,7 @@ export async function generateOpenapiClient(openapiYamlPath: string, outPath: st
     lastPendingGeneration = new Promise<void>(resolve => {
         pendingGeneration.then(() => generateOpenapiClientInternal(openapiYamlPath, outPath)).then(resolve);
     });
+    return lastPendingGeneration;
 }
 
 async function generateOpenapiClientInternal(openapiYamlPath: string, outPath: string) {
