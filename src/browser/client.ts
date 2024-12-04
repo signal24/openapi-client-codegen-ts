@@ -7,7 +7,7 @@ type OpenApiWrapperFn = <T extends OpenApiRequest>(options: Parameters<T>[0], fn
 
 export interface OpenApiClientOptions {
     wrapper?: OpenApiWrapperFn;
-    headers?: Record<string, string | undefined> | (() => Record<string, string | undefined>);
+    headers?: Record<string, string | null | undefined> | (() => Record<string, string | null | undefined>);
     onError?: (err: Error, options: Options) => Error | null | void;
 }
 
@@ -61,7 +61,11 @@ export function configureOpenApiClient(client: Client, options: OpenApiClientOpt
             const headers = typeof options.headers === 'function' ? options.headers() : options.headers;
             if (headers) {
                 for (const [key, value] of Object.entries(headers)) {
-                    request.headers.set(key, value as string);
+                    if (value === null) {
+                        request.headers.delete(key);
+                    } else if (value !== undefined) {
+                        request.headers.set(key, value as string);
+                    }
                 }
             }
             return request;
