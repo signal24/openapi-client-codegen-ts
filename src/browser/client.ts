@@ -20,6 +20,10 @@ export function dataFrom<T>(response: OpenApiResponse<T>): T {
     return response.data!;
 }
 
+export async function dataFromAsync<T>(promise: Promise<OpenApiResponse<T>>): Promise<T> {
+    return (await promise).data!;
+}
+
 export class OpenApiError extends Error {
     constructor(
         message: string,
@@ -49,7 +53,7 @@ export function configureOpenApiClient(client: Client, options: OpenApiClientOpt
                 throw handlerResult;
             }
             if (handlerResult === null) {
-                return new Promise(() => { }); // hang indefinitely
+                return new Promise(() => {}); // hang indefinitely
             }
         }
 

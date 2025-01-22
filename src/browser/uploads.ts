@@ -1,4 +1,4 @@
-import { RequestOptionsBase } from '@hey-api/client-fetch';
+import { RequestOptions } from '@hey-api/client-fetch';
 
 class BaseUploadRequest {
     validator = null;
@@ -27,7 +27,7 @@ export class ReactNativeFileUploadRequest extends BaseUploadRequest {
     }
 }
 
-export function patchRequestOptionsForFileUpload<T extends RequestOptionsBase<boolean>>(options: T): T {
+export function patchRequestOptionsForFileUpload<T extends RequestOptions<boolean>>(options: T): T {
     if (typeof options.body !== 'object') {
         return options;
     }
