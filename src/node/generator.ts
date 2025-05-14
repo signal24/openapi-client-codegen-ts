@@ -85,22 +85,21 @@ async function generateOpenapiClientInternal(openapiYamlPath: string, outPath: s
 
         await OpenAPI.createClient({
             input: openapiYamlPath,
-            experimentalParser: false, // changes null unknowns to unknowns in v0.62.0
             output: outPath,
             plugins: [
-                {
-                    name: '@hey-api/client-fetch', // default client
-                    baseUrl: false
-                },
-                '@hey-api/schemas', // preserve default output
                 {
                     name: '@hey-api/typescript', // preserve default output
                     readOnlyWriteOnlyBehavior: 'off'
                 },
                 {
+                    name: '@hey-api/sdk',
                     asClass: true,
                     serviceNameBuilder: '{{name}}Api',
-                    name: '@hey-api/sdk'
+                },
+                '@hey-api/schemas', // preserve default output
+                {
+                    name: '@hey-api/client-fetch', // default client
+                    baseUrl: false
                 }
             ]
         });
