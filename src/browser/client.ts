@@ -40,12 +40,9 @@ export function configureOpenApiClient(client: Client, options: OpenApiClientOpt
         throwOnError: true
     });
 
-    client.interceptors.error.use((error, response, request, opts) => {
-        const message =
-            error && typeof error === 'object' && 'error' in error && typeof error.error === 'string'
-                ? `${error.error} (${response.status})`
-                : String(error);
-        const err = new OpenApiError(message, request, response, error);
+    client.interceptors.error.use((body, response, request, opts) => {
+        const message = getMessageFromBody(body, response);
+        const err = new OpenApiError(message, request, response, body);
 
         if (options.onError) {
             const handlerResult = options.onError(err, opts);
@@ -96,4 +93,14 @@ export function configureOpenApiClient(client: Client, options: OpenApiClientOpt
     client.post = options => request({ ...options, method: 'POST' });
     client.put = options => request({ ...options, method: 'PUT' });
     client.trace = options => request({ ...options, method: 'TRACE' });
+}
+
+function getMessageFromBody(body: unknown, response: Response): string {
+    if (body && typeof body === 'object') {
+        if ('error' in body && typeof body.error === 'string') {
+            return `${body.error} (${response.status})`;
+        }
+        return JSON.stringify(body);
+    }
+    return String(body);
 }

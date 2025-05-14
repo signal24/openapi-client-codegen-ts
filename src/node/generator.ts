@@ -88,9 +88,15 @@ async function generateOpenapiClientInternal(openapiYamlPath: string, outPath: s
             experimentalParser: false, // changes null unknowns to unknowns in v0.62.0
             output: outPath,
             plugins: [
-                '@hey-api/client-fetch', // default client
+                {
+                    name: '@hey-api/client-fetch', // default client
+                    baseUrl: false
+                },
                 '@hey-api/schemas', // preserve default output
-                '@hey-api/typescript', // preserve default output
+                {
+                    name: '@hey-api/typescript', // preserve default output
+                    readOnlyWriteOnlyBehavior: 'off'
+                },
                 {
                     asClass: true,
                     serviceNameBuilder: '{{name}}Api',
