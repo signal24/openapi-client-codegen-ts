@@ -5,9 +5,10 @@ import { patchRequestOptionsForFileUpload } from './uploads.js';
 type OpenApiRequest = Client['request'];
 type OpenApiWrapperFn = <T extends OpenApiRequest>(options: Parameters<T>[0], fn: T) => RequestResult;
 
+type IHeaders = Record<string, string | null | undefined>;
 export interface OpenApiClientOptions {
     wrapper?: OpenApiWrapperFn;
-    headers?: Record<string, string | null | undefined> | (() => Record<string, string | null | undefined>);
+    headers?: IHeaders | (() => IHeaders) | (() => Promise<IHeaders>);
     onError?: (err: Error, options: Options) => Error | null | void;
 }
 
@@ -58,8 +59,8 @@ export function configureOpenApiClient(client: Client, options: OpenApiClientOpt
     });
 
     if (options.headers) {
-        client.interceptors.request.use(request => {
-            const headers = typeof options.headers === 'function' ? options.headers() : options.headers;
+        client.interceptors.request.use(async request => {
+            const headers = typeof options.headers === 'function' ? await options.headers() : options.headers;
             if (headers) {
                 for (const [key, value] of Object.entries(headers)) {
                     if (value === null) {
