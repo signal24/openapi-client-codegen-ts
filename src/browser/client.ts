@@ -8,7 +8,7 @@ type OpenApiWrapperFn = <T extends OpenApiRequest>(options: Parameters<T>[0], fn
 type IHeaders = Record<string, string | null | undefined>;
 export interface OpenApiClientOptions {
     wrapper?: OpenApiWrapperFn;
-    headers?: IHeaders | (() => IHeaders) | (() => Promise<IHeaders>);
+    headers?: IHeaders | ((request: Request) => IHeaders) | ((request: Request) => Promise<IHeaders>);
     onError?: (err: Error, options: Options) => Error | null | void;
 }
 
@@ -60,7 +60,7 @@ export function configureOpenApiClient(client: Client, options: OpenApiClientOpt
 
     if (options.headers) {
         client.interceptors.request.use(async request => {
-            const headers = typeof options.headers === 'function' ? await options.headers() : options.headers;
+            const headers = typeof options.headers === 'function' ? await options.headers(request) : options.headers;
             if (headers) {
                 for (const [key, value] of Object.entries(headers)) {
                     if (value === null) {
