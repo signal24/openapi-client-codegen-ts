@@ -6,8 +6,13 @@ import * as OpenAPI from '@hey-api/openapi-ts';
 
 const DEFAULT_OUT_PATH = './src/openapi-client-generated';
 
+interface IGeneratorConfig {
+    path: string;
+    prefix?: string;
+}
+
 let generatedHash: string | null = null;
-let generatorMap: Record<string, string> = {};
+let generatorMap: Record<string, string | IGeneratorConfig> = {};
 let overridesMap: Record<string, string> | null = null;
 let overridesInverseMap: Record<string, string> | null = null;
 
@@ -17,10 +22,10 @@ let overridesInverseMap: Record<string, string> | null = null;
 
 export function createWatchfulOpenapiClientGenerators() {
     loadOpenapiConfig();
-    return Object.entries(generatorMap).map(([openapiYamlPath, outPath]) => createWatchfulOpenapiClientGenerator(openapiYamlPath, outPath));
+    return Object.entries(generatorMap).map(([openapiYamlPath, outConfig]) => createWatchfulOpenapiClientGenerator(openapiYamlPath, outConfig));
 }
 
-export function createWatchfulOpenapiClientGenerator(openapiYamlPath: string, outPath: string) {
+export function createWatchfulOpenapiClientGenerator(openapiYamlPath: string, outConfig: string | IGeneratorConfig) {
     const resolvedPath = overridesMap?.[openapiYamlPath] ?? openapiYamlPath;
 
     if (!existsSync(resolvedPath)) {
@@ -28,7 +33,7 @@ export function createWatchfulOpenapiClientGenerator(openapiYamlPath: string, ou
         return null;
     }
 
-    const generate = () => generateOpenapiClient(resolvedPath, outPath);
+    const generate = () => generateOpenapiClient(resolvedPath, outConfig);
 
     const watcher = watch(resolvedPath);
     watcher.on('change', () => {
@@ -50,23 +55,26 @@ export function createWatchfulOpenapiClientGenerator(openapiYamlPath: string, ou
 
 export async function generateConfiguredOpenapiClients() {
     loadOpenapiConfig();
-    for (const [openapiYamlPath, outPath] of Object.entries(generatorMap)) {
+    for (const [openapiYamlPath, outConfig] of Object.entries(generatorMap)) {
         const resolvedPath = overridesMap?.[openapiYamlPath] ?? openapiYamlPath;
-        await generateOpenapiClient(resolvedPath, outPath);
+        await generateOpenapiClient(resolvedPath, outConfig);
     }
 }
 
 let lastPendingGeneration: Promise<void> | null = null;
 
-export async function generateOpenapiClient(openapiYamlPath: string, outPath: string = DEFAULT_OUT_PATH) {
+export async function generateOpenapiClient(openapiYamlPath: string, outConfig: string | IGeneratorConfig = DEFAULT_OUT_PATH) {
     const pendingGeneration = lastPendingGeneration ?? Promise.resolve();
     lastPendingGeneration = new Promise<void>(resolve => {
-        pendingGeneration.then(() => generateOpenapiClientInternal(openapiYamlPath, outPath)).then(resolve);
+        pendingGeneration.then(() => generateOpenapiClientInternal(openapiYamlPath, outConfig)).then(resolve);
     });
     return lastPendingGeneration;
 }
 
-async function generateOpenapiClientInternal(openapiYamlPath: string, outPath: string) {
+async function generateOpenapiClientInternal(openapiYamlPath: string, outConfig: string | IGeneratorConfig) {
+    const prefix = typeof outConfig === 'string' ? '' : (outConfig.prefix ?? '');
+    const outPath = typeof outConfig === 'string' ? outConfig : outConfig.path;
+
     const yaml = readFileSync(openapiYamlPath, 'utf8');
     const hash = createHash('sha256').update(yaml).digest('hex');
 
@@ -94,7 +102,7 @@ async function generateOpenapiClientInternal(openapiYamlPath: string, outPath: s
                 {
                     name: '@hey-api/sdk',
                     asClass: true,
-                    serviceNameBuilder: '{{name}}Api',
+                    serviceNameBuilder: `${prefix}{{name}}Api`,
                 },
                 '@hey-api/schemas', // preserve default output
                 {
