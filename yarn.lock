@@ -291,7 +291,7 @@ __metadata:
     type-fest: "npm:^4.41.0"
     typescript: "npm:~5.8"
   bin:
-    generate-openapi-client: ./dist/src/node/cli.js
+    generate-openapi-client: ./dist/src/generator/cli.js
   languageName: unknown
   linkType: soft
 

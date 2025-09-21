@@ -1,6 +1,6 @@
 {
     "extends": "@tsconfig/node22/tsconfig.json",
-    "include": ["src/index.ts", "src/node/**/*"],
+    "include": ["src/generator/**/*"],
     "compilerOptions": {
         "composite": true,
         "types": ["node"],
