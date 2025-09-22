@@ -1,10 +1,10 @@
 {
   "name": "@signal24/openapi-client-codegen",
   "type": "module",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "description": "OpenAPI client generator for TypeScript apps",
-  "module": "./dist/src/index.js",
-  "typings": "./dist/src/index.d.ts",
+  "module": "./dist/src/client/index.js",
+  "typings": "./dist/src/client/index.d.ts",
   "bin": {
     "generate-openapi-client": "./dist/src/generator/cli.js"
   },
