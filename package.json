@@ -1,21 +1,24 @@
 {
   "name": "@signal24/openapi-client-codegen",
   "type": "module",
-  "version": "2.6.1",
+  "version": "2.6.2",
   "description": "OpenAPI client generator for TypeScript apps",
-  "module": "./dist/src/client/index.js",
-  "typings": "./dist/src/client/index.d.ts",
+  "main": "./dist/cjs/src/client/index.cjs",
+  "module": "./dist/esm/src/client/index.js",
+  "typings": "./dist/esm/src/client/index.d.ts",
   "bin": {
-    "generate-openapi-client": "./dist/src/generator/cli.js"
+    "generate-openapi-client": "./dist/esm/src/generator/cli.js"
   },
   "exports": {
     ".": {
-      "import": "./dist/src/client/index.js",
-      "types": "./dist/src/client/index.d.ts"
+      "import": "./dist/esm/src/client/index.js",
+      "require": "./dist/cjs/src/client/index.cjs",
+      "types": "./dist/esm/src/client/index.d.ts"
     },
     "./generator": {
-      "import": "./dist/src/generator/index.js",
-      "types": "./dist/src/generator/index.d.ts"
+      "import": "./dist/esm/src/generator/index.js",
+      "require": "./dist/cjs/src/generator/index.cjs",
+      "types": "./dist/esm/src/generator/index.d.ts"
     }
   },
   "browser": {
@@ -23,7 +26,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc -p tsconfig.client.json && tsc -p tsconfig.generator.json && chmod +x ./dist/src/generator/cli.js",
+    "build": "tsc -p tsconfig.client.json && tsc -p tsconfig.generator.json && tsc -p tsconfig.client.cjs.json && tsc -p tsconfig.generator.cjs.json && find dist/cjs -name '*.js' -exec sh -c 'mv \"$1\" \"${1%.js}.cjs\"' _ {} \\; && find dist/cjs -name '*.cjs' -exec sed -i '' 's/require(\"\\.\\//require(\".\\//' {} \\; && find dist/cjs -name '*.cjs' -exec sed -i '' 's/\\.js\")/\\.cjs\")/g' {} \\; && chmod +x ./dist/esm/src/generator/cli.js",
     "build:clean": "rm -rf dist && yarn build",
     "lint": "eslint . --ext .js,.cjs,.mjs,.ts --fix --ignore-path .gitignore",
     "format": "prettier --write ."

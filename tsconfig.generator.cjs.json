@@ -5,8 +5,9 @@
         "composite": true,
         "types": ["node"],
         "noImplicitAny": true,
-        "outDir": "dist/esm",
-        "module": "Node16",
+        "outDir": "dist/cjs",
+        "module": "CommonJS",
+        "moduleResolution": "Node",
         "target": "ES2022"
     }
 }

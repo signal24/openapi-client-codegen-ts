@@ -5,6 +5,8 @@
         "composite": true,
         "lib": ["dom"],
         "noImplicitAny": true,
-        "outDir": "dist"
+        "outDir": "dist/esm",
+        "module": "Node16",
+        "target": "ES2022"
     }
 }
